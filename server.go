@@ -9,11 +9,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"time"
+	"os"
 )
 
 // A single Broker will be created in this program. It is responsible
@@ -181,6 +182,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 //
 func main() {
 
+	scanner := bufio.NewScanner(os.Stdin)
+	var text string
+
 	// Make a new Broker instance
 	b := &Broker{
 		make(map[chan string]bool),
@@ -202,16 +206,12 @@ func main() {
 	// into the Broker's messages channel and are then broadcast
 	// out to any clients that are attached.
 	go func() {
-		for i := 0; ; i++ {
-
-			// Create a little message to send to clients,
-			// including the current time.
-			b.messages <- fmt.Sprintf("%d - the time is %v", i, time.Now())
-
-			// Print a nice log message and sleep for 5s.
-			log.Printf("Sent message %d ", i)
-			time.Sleep(5e9)
-
+		i := 1
+		for scanner.Scan() {
+			text = scanner.Text()
+			fmt.Println("Received new line of text: ", text)
+			b.messages <- fmt.Sprintf("#%d: %s", i, text)
+			i++
 		}
 	}()
 

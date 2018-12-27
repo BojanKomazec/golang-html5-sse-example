@@ -98,3 +98,24 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/>
 
+## Notes for new version (Bojan Komazec)
+
+Modification by B.Komazec makes this server application not generating
+events (messages) itself but receiving them via stdin. Each new line
+of text is a new message.
+
+Text can be input manually in terminal (ENTER ends the current message
+and sends it to the server input) or can be streamed from some other
+process whose stdout is piped into server process e.g. ls | ./server.
+
+Script timer.sh provied in this repository can be used as a test
+process which is writing current time to stdout each second.
+
+	$ ./timer.sh | ./server
+
+Upon cloning the repo, to make this script executable do the following:
+
+	$ chmod u+x timer.sh
+
+If server's host machine has IP x.y.v.w then any browser on the local
+LAN can access it by specifying URL http://x.y.v.w:8000.

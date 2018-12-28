@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 // A single Broker will be created in this program. It is responsible
@@ -164,11 +165,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Read in the template with our SSE JavaScript code.
-	t, err := template.ParseFiles("templates/index.html")
+	// get absolute path of html template file
+	exec, err := os.Executable()
 	if err != nil {
-		log.Fatal("WTF dude, error parsing your template.")
+		panic(err)
+	}
+	execPath := filepath.Dir(exec)
+	htmlTemplatePath := filepath.Join(execPath, "templates/index.html")
+	log.Println("HTML template file path: ", htmlTemplatePath)
 
+	// Read in the template with our SSE JavaScript code.
+	t, err := template.ParseFiles(htmlTemplatePath)
+	if err != nil {
+		log.Fatalf("Failed to parse HTML template file. Error: %s", err.Error())
 	}
 
 	// Render the template, writing to `w`.

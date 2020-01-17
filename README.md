@@ -29,7 +29,7 @@ Check out the repository from GitHub
 
 ## Running
 
-To run the server, do 
+To run the server, do
 
 	go run ./server.go
 
@@ -62,6 +62,21 @@ And, you should see output in the terminal like the following
 	2013/03/15 03:56:15 Broadcast message to 3 clients
 	2013/03/15 03:56:20 Sent message 5 
 	2013/03/15 03:56:20 Broadcast message to 3 clients
+
+## Running in Docker
+
+### Build Docker image
+
+```
+$ docker build -t http_server .
+```
+
+### Run Docker container
+
+```
+$ ping 8.8.8.8 | docker run -i --rm -p 8000:8000 --name http_server http_server
+```
+
 
 ## Thanks
 
